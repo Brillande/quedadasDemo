@@ -16,6 +16,7 @@
     <div></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
+        var idDinamica = 0;
         $('button').click(function proposicion() {
             var fechaPropuesta = $('input#fecha').val()
             var lugarPropuesto = $('input#lugar').val()
@@ -24,13 +25,16 @@
             } else {
                 $('div').append('<h2>' + fechaPropuesta + '</h2>')
                 $('div').append('<h2>' + lugarPropuesto + '</h2>')
-                $('div').append('<button id="cuentaVotos">' + "+1" + '</button>')
+                $('div').append('<button id="' + idDinamica + '">' + "+1" + '</button>')
+                $('div').append('<span>' + 0 + '</span>')
+                idDinamica++;
             }
         })
-        $(document).on('click', 'cuentaVotos', function() {
-            var vecesVotadas = 0
-            vecesVotadas = cuentaVotos++
-                $().text(vecesVotadas)
+        $(document).on('click', 'button', function(event) {
+            $(event.currentTarget).attr('id')
+            var span = $(event.currentTarget).next('span')
+            var votos = parseInt(span.text())
+            span.text(votos + 1)
         })
     </script>
 </body>
