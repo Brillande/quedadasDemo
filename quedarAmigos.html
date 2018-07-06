@@ -12,21 +12,25 @@
     <h1>dia a proponer</h1>
     <input id="fecha" type="date">
     <input id="lugar" type="text">
-    <button>proponer</button>
+    <button id="propuesta">proponer</button>
     <div></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script>
         $('button').click(function proposicion() {
             var fechaPropuesta = $('input#fecha').val()
             var lugarPropuesto = $('input#lugar').val()
-            if (input) {
-                input === undefined
-                return ('rellena datos')
+            if (!fechaPropuesta || !lugarPropuesto) {
+                return alert('Hay datos por rellenar!')
             } else {
                 $('div').append('<h2>' + fechaPropuesta + '</h2>')
                 $('div').append('<h2>' + lugarPropuesto + '</h2>')
-                $('div').append('<button>' + "+1" + '</button>')
+                $('div').append('<button id="cuentaVotos">' + "+1" + '</button>')
             }
+        })
+        $(document).on('click', 'cuentaVotos', function() {
+            var vecesVotadas = 0
+            vecesVotadas = cuentaVotos++
+                $().text(vecesVotadas)
         })
     </script>
 </body>
