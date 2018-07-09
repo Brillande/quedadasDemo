@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -13,28 +14,60 @@
     <input id="fecha" type="date">
     <input id="lugar" type="text">
     <button id="propuesta">proponer</button>
-    <div></div>
+    <div id="" 'idDivDinamica'></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
     <script>
-        var idDinamica = 0;
-        $('button').click(function proposicion() {
+        $('button').click(function crearSumarFecha() {
             var fechaPropuesta = $('input#fecha').val()
             var lugarPropuesto = $('input#lugar').val()
             if (!fechaPropuesta || !lugarPropuesto) {
                 return alert('Hay datos por rellenar!')
             } else {
-                $('div').append('<h2>' + fechaPropuesta + '</h2>')
-                $('div').append('<h2>' + lugarPropuesto + '</h2>')
-                $('div').append('<button id="' + idDinamica + '">' + "+1" + '</button>')
-                $('div').append('<span>' + 0 + '</span>')
-                idDinamica++;
+                $.post("http://192.168.100.11:1337/fecha", {
+                    fecha: fechaPropuesta,
+                    lugar: lugarPropuesto
+                }, function() {
+                    $('div').append('<h2>' + fechaPropuesta + '</h2>')
+                    $('div').append('<h2>' + lugarPropuesto + '</h2>')
+                    $('div').append('<button class="sumar">+1</button>')
+                    $('div').append('<button class="restar">-1</button>')
+                    $('div').append('<span>' + 0 + '</span>')
+                })
+
             }
         })
-        $(document).on('click', 'button', function(event) {
+        $(document).on('click', 'button.sumar', function(event) {
             $(event.currentTarget).attr('id')
-            var span = $(event.currentTarget).next('span')
+            var span = $(event.currentTarget).next().next('span')
             var votos = parseInt(span.text())
+            if (votos === 1) {
+                return alert('Ya has votado... listillo ;*')
+            }
             span.text(votos + 1)
+
+        })
+        $(document).on('click', 'button.restar', function(event) {
+            $(event.currentTarget).attr('id')
+            span = $(event.currentTarget).next('span')
+            votos = parseInt(span.text())
+            if (votos <= 0) {
+                return alert('¿Estas bien? queremos saber cuando quedar... hater! :(')
+            }
+            span.text(votos - 1)
+        })
+        $.get("http://192.168.100.11:1337/fechas", function(fechas) {
+            console.log(fechas)
+            fechas.forEach(function(fecha) {
+                $('div').append('<h2>' + fecha.fecha + '</h2>')
+                $('div').append('<h2>' + fecha.lugar + '</h2>')
+                $('div').append('<button class="sumar">+1</button>')
+                $('div').append('<button class="restar">-1</button>')
+                $('div').append('<span>' + 0 + '</span>')
+                console.log("esto es una fecha", fecha);
+            })
         })
     </script>
 </body>
